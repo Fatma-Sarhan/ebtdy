@@ -84,10 +84,11 @@ class CategoryController extends Controller {
 	 */
 	public function update(Request $request, $id)
 	{
+		$user = Auth::user();
 		$category = Category::findOrFail($id);
 
 		$category->name = $request->input("name");
-        $category->user_id = $request->input("user_id");
+        $category->user_id = $user->id;
 
 		$category->save();
 
@@ -102,10 +103,11 @@ class CategoryController extends Controller {
 	 */
 	public function destroy($id)
 	{
+		return $id;
 		$category = Category::findOrFail($id);
-		$category->delete();
+		// $category->delete();
 
-		return redirect()->route('categories.index')->with('message', 'Item deleted successfully.');
+		// return redirect()->route('categories.index')->with('message', 'Item deleted successfully.');
 	}
 
 }

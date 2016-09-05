@@ -5,6 +5,7 @@
 @section('header')
     <div class="page-header">
         <h1><i class="glyphicon glyphicon-edit"></i> Products / Edit #{{$product->id}}</h1>
+        <div id="msg"></div>
     </div>
 @endsection
 
@@ -14,7 +15,7 @@
     <div class="row">
         <div class="col-md-12">
 
-            <form action="{{ route('products.update', $product->id) }}" method="POST">
+            <form action="{{ route('products.update', $product->id) }}" method="POST" class="edit">
                 <input type="hidden" name="_method" value="PUT">
                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
 
@@ -26,21 +27,27 @@
                        @endif
                     </div>
                     <div class="form-group @if($errors->has('cat_id')) has-error @endif">
-                       <label for="cat_id-field">Cat_id</label>
-                    <input type="text" id="cat_id-field" name="cat_id" class="form-control" value="{{ is_null(old("cat_id")) ? $product->cat_id : old("cat_id") }}"/>
+                       <label for="cat_id-field">Cat_Name</label>
+                    <select class="form-control" value="{{ old("cat_id") }}" id="cat_id-field" name="cat_id">
+                     
+                        @foreach ($cats as $cat)
+                           <option value="{{$cat->id}}" >{{$cat->name}} </option>
+                        @endforeach
+                            
+                    </select>
                        @if($errors->has("cat_id"))
                         <span class="help-block">{{ $errors->first("cat_id") }}</span>
                        @endif
                     </div>
-                    <div class="form-group @if($errors->has('user_id')) has-error @endif">
+                    <!-- <div class="form-group @if($errors->has('user_id')) has-error @endif">
                        <label for="user_id-field">User_id</label>
                     <input type="text" id="user_id-field" name="user_id" class="form-control" value="{{ is_null(old("user_id")) ? $product->user_id : old("user_id") }}"/>
                        @if($errors->has("user_id"))
                         <span class="help-block">{{ $errors->first("user_id") }}</span>
                        @endif
-                    </div>
+                    </div> -->
                 <div class="well well-sm">
-                    <button type="submit" class="btn btn-primary">Save</button>
+                    <button type="submit" class="btn btn-primary edit" data-rowtok="{{ csrf_token() }}" data-rowid="{{$product->id}}">Save</button>
                     <a class="btn btn-link pull-right" href="{{ route('products.index') }}"><i class="glyphicon glyphicon-backward"></i>  Back</a>
                 </div>
             </form>

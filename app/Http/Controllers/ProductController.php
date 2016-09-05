@@ -76,8 +76,9 @@ class ProductController extends Controller {
 	public function edit($id)
 	{
 		$product = Product::findOrFail($id);
+		$cats = Category::all();
 
-		return view('products.edit', compact('product'));
+		return view('products.edit', compact('product','cats'));
 	}
 
 	/**
@@ -89,11 +90,12 @@ class ProductController extends Controller {
 	 */
 	public function update(Request $request, $id)
 	{
+		$user = Auth::user();
 		$product = Product::findOrFail($id);
 
-		$product->name = $request->input("name");
-        $product->cat_id = $request->input("cat_id");
-        $product->user_id = $request->input("user_id");
+		$product->name = $request->name;
+        $product->cat_id = $request->cat_id;
+        $product->user_id = $user->id;
 
 		$product->save();
 
@@ -110,8 +112,10 @@ class ProductController extends Controller {
 	{
 		$product = Product::findOrFail($id);
 		$product->delete();
+		$products = Product::orderBy('id', 'desc')->paginate(10);
 
-		return redirect()->route('products.index')->with('message', 'Item deleted successfully.');
+		return [$products];
+		// return redirect()->route('products.index')->with('message', 'Item deleted successfully.');
 	}
 
 }
